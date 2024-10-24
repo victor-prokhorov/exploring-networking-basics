@@ -38,3 +38,24 @@ cargo build --target aarch64-unknown-linux-gnu
 [target.aarch64-unknown-linux-gnu]
 linker = "/usr/bin/aarch64-linux-gnu-gcc"
 ```
+
+### config router
+
+- from `ifconfig` get mac address and ip
+- DHCP address reservation, add new to make sure not accidentally operate on another machine
+- allow accepting in `iptables`
+```sh
+pi@raspberrypi:~ $ sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+pi@raspberrypi:~ $ sudo iptables -L
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+ACCEPT     tcp  --  anywhere             anywhere             tcp dpt:http
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+```
+- https://canyouseeme.org/
+
