@@ -62,3 +62,9 @@ target     prot opt source               destination
 ## iteration 2: with linux system calls
 - https://www.cs.cmu.edu/~prs/15-441-F10/lectures/r01-sockets.pdf
 
+## iteratoin 3: preparing the os from scratch
+- https://os.phil-opp.com/freestanding-rust-binary/#comments
+- https://www.youtube.com/watch?v=rH5jnbJ3tL4&list=PLib6-zlkjfXkdCjQgrZhmfJOWBk_C2FTY&index=1
+- [redox should work on a pi but it's much more complex](https://www.redox-os.org/)
+- https://www.youtube.com/watch?app=desktop&v=IgC2HvBesms
+- https://github.com/smoltcp-rs/smoltcp/tree/main
