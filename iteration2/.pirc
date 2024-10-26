@@ -1,0 +1,4 @@
+PI_IP=192.168.0.102
+PI_SECRET=pi1234
+TARGET=aarch64-unknown-linux-gnu
+
