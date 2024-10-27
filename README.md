@@ -21,7 +21,7 @@ export CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=/usr/bin/arm-linux-gnue
 cargo build --target=armv7-unknown-linux-gnueabihf
 ```
 - [installing arm cross compiling gnu toolchain](https://chacin.dev/blog/cross-compiling-rust-for-the-raspberry-pi/)
-[Pi 2/3/4: AArch32 target with hard float (arm-none-linux-gnueabihf)](https://developer.arm.com/downloads/-/gnu-a)
+- [Pi 2/3/4: AArch32 target with hard float (arm-none-linux-gnueabihf)](https://developer.arm.com/downloads/-/gnu-a)
 ```
 export PATH="$HOME/bin/gcc-arm-10.3-2021.07-x86_64-arm-none-linux-gnueabihf/bin:$PATH"
 ```
@@ -68,3 +68,47 @@ target     prot opt source               destination
 - [redox should work on a pi but it's much more complex](https://www.redox-os.org/)
 - https://www.youtube.com/watch?app=desktop&v=IgC2HvBesms
 - https://github.com/smoltcp-rs/smoltcp/tree/main
+- https://github.com/rust-embedded/rust-raspberrypi-OS-tutorials
+
+### booting the thing
+
+- preparing the sd card
+```sh
+lsblk
+sudo umount /dev/sdb1
+sudo umount /dev/sdb2
+sudo lsof | grep /dev/sdb
+sudo fdisk /dev/sdb
+# `d` delete partition
+# `n` create new partition
+# `t` and pick FAT32
+# `w` to write in memory change
+# format partition
+sudo mkfs.vfat /dev/sdb1
+sudo mount /dev/sdb1 /mnt
+```
+- [super straightforward minimal example](https://harmonicss.co.uk/rust/rust-on-a-raspberry-pi-part-1/)
+- i will derive this one and will try to blink activity led to start
+- toolchain doublecheck
+```sh
+rustup target add armv7a-none-eabi
+sudo apt install binutils-arm-none-eabi
+```
+- cargo build and inspect with
+```s
+arm-none-eabi-objdump -D ./target/armv7a-none-eabi/debug/pi_baremetal_rust | less
+```
+- use custom linked script
+```sh
+cargo rustc -- -C link-arg=--script=./linker.ld
+```
+- start need to at `00008000 <_start>:`
+- https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+- linux will produce .elf files
+- `arm-none-eabi-objcopy -O binary target/armv7a-none-eabi/debug/pi_baremetal_rust ./kernel7.img` 
+- firemware boot, from https://github.com/raspberrypi/firmware.git
+```sh
+sudo curl -O https://raw.githubusercontent.com/raspberrypi/firmware/HEAD/boot/start.elf
+sudo curl -O https://raw.githubusercontent.com/raspberrypi/firmware/HEAD/boot/bootcode.bin
+sudo curl -O https://raw.githubusercontent.com/raspberrypi/firmware/HEAD/boot/fixup.dat
+```
